@@ -2,7 +2,6 @@ import { bold, green, magenta, yellow } from "./imports/colors.ts";
 import { Log, Clear, Exit } from "./programs/inout/out.ts";
 import { Commander } from "./components/commander.ts";
 import { Servis } from "./programs/servis/main.ts";
-import { sentenceCase } from "./imports/case.ts";
 import { Router } from "./components/router.ts";
 import { Show } from "./programs/fs/show.ts";
 import { Read } from "./programs/fs/read.ts";
@@ -24,7 +23,7 @@ const commander = new Commander([
 while (true) {
     const publicRoute = router.getPublicRoute().replaceAll("\\", "/");
     const route = `~${publicRoute.length ? "/" : ""}${publicRoute}`;
-    const folder = (router.getCurrentFolder());
+    const folder = router.getCurrentFolder();
     const user = router.getCurrentUser();
 
     await commander.start(`${green(folder)} ${magenta(user)} ${yellow(route)} \n${bold("$")}`);

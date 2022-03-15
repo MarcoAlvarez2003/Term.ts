@@ -24,8 +24,8 @@ const commander = new Commander([
 while (true) {
     const publicRoute = router.getPublicRoute().replaceAll("\\", "/");
     const route = `~${publicRoute.length ? "/" : ""}${publicRoute}`;
-    const folder = sentenceCase(router.getCurrentFolder());
-    const user = sentenceCase(router.getCurrentUser());
+    const folder = (router.getCurrentFolder());
+    const user = router.getCurrentUser();
 
     await commander.start(`${green(folder)} ${magenta(user)} ${yellow(route)} \n${bold("$")}`);
 }

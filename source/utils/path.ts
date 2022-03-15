@@ -9,15 +9,29 @@ interface Path {
 function getPath(): Path {
     const route = Deno.cwd();
 
-    const [disk, users, name, ...others] = route.split("\\");
+    const [disk, users, name, ...others] = route.split("/")
 
-    return {
-        private: [disk, users, name],
-        public: [...others],
-        route,
-        disk,
-        name,
-    };
+    if (Deno.build.os === "linux") {
+        const disk = users;
+
+        return {
+            private: [disk, name],
+            public: [...others],
+            route,
+            disk,
+            name,
+        };
+    } else {
+        return {
+            private: [disk, users, name],
+            public: [...others],
+            route,
+            disk,
+            name,
+        };
+    }
+
+    
 }
 
 export { getPath };

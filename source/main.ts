@@ -5,10 +5,11 @@ import { Servis } from "./programs/servis/main.ts";
 import { Router } from "./components/router.ts";
 import { Show } from "./programs/fs/show.ts";
 import { Read } from "./programs/fs/read.ts";
-import { getPath } from "./utils/path.ts";
+import { Path } from "./utils/path.ts";
 import { Cd } from "./programs/fs/cd.ts";
+import { Capitalize } from "./utils/fmt.ts";
 
-const router = new Router(getPath());
+const router = new Router(Path.instance);
 
 const commander = new Commander([
     new Clear(),
@@ -23,8 +24,10 @@ const commander = new Commander([
 while (true) {
     const publicRoute = router.getPublicRoute().replaceAll("\\", "/");
     const route = `~${publicRoute.length ? "/" : ""}${publicRoute}`;
-    const folder = router.getCurrentFolder();
-    const user = router.getCurrentUser();
+    const folder = Capitalize(router.getCurrentFolder());
+    const user = Capitalize(router.getCurrentUser());
 
-    await commander.start(`${green(folder)} ${magenta(user)} ${yellow(route)} \n${bold("$")}`);
+    await commander.start(
+        bold(`${green(folder)} ${magenta(user)} ${yellow(route)} \n${bold("$")}`)
+    );
 }

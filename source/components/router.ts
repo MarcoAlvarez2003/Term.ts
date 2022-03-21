@@ -2,8 +2,7 @@ import { basename, join } from "../imports/path.ts";
 import { bold, red } from "../imports/colors.ts";
 import { formatRoute } from "../utils/fmt.ts";
 import { getRoute } from "../utils/route.ts";
-import { Path } from "../utils/path.ts";
-import { exist } from "../utils/fs.ts";
+import { NonExistFolder, NotAllowedPath, Path } from "../utils/path.ts";
 
 export class Router {
     constructor(private path: Path) {}
@@ -12,46 +11,35 @@ export class Router {
         const _route = getRoute(formatRoute(route));
 
         if (_route.isAbsolute) {
-            this.path.route = join(...this.path.private);
-            this.path.public.length = 0;
+            this.path.location = join(...this.path.root);
+            this.path.path.length = 0;
         }
 
-        for (const folder of _route.folders) {
-            const route = join(this.path.route, folder);
-
-            if (folder === "..") {
-                this.back();
-                continue;
-            }
-
-            if (await exist(route)) {
-                this.path.public.push(folder);
-                this.path.route = route;
-                continue;
-            }
-
-            this.NonExistFolder(folder);
+        try {
+            await this.path.push(..._route.folders);
+        } catch (_) {
+            this.NonExistFolder(_);
         }
     }
 
     public back() {
-        if (this.path.public.length) {
-            this.path.public.pop();
+        if (this.path.path.length) {
+            this.path.path.pop();
         }
 
-        this.path.route = join(...this.path.private, ...this.path.public);
+        this.path.location = join(...this.path.root, ...this.path.path);
     }
 
     public getCurrentFolder() {
-        return basename(this.path.route);
+        return basename(this.path.location);
     }
 
     public getCurrentRoute() {
-        return this.path.route;
+        return this.path.location;
     }
 
     public getCurrentUser() {
-        return this.path.name;
+        return this.path.user;
     }
 
     public getCurrentDisk() {
@@ -59,14 +47,20 @@ export class Router {
     }
 
     public getPublicRoute() {
-        return this.path.public.join("\\");
+        return this.path.path.join("\\");
     }
 
     public getPrivateRoute() {
-        return this.path.private.join("\\");
+        return this.path.root.join("\\");
     }
 
-    private NonExistFolder(folder: string) {
-        console.log(`${red("NonExist Folder")}: ${bold(folder)}`);
+    private NonExistFolder(error: NotAllowedPath | NonExistFolder) {
+        if (error instanceof NonExistFolder) {
+            console.log(`${red("NonExist Folder")}: ${bold(error.dir)}`);
+        }
+
+        if (error instanceof NotAllowedPath) {
+            console.log(`${red("NotAllowedPath")}: ${bold(error.path)}`);
+        }
     }
 }

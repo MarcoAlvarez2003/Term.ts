@@ -29,11 +29,9 @@ export class Clear implements Command {
 export class Exit implements Command {
     public target = /(exit)/;
 
-    constructor(private storage: MemoryStorage) {}
+    constructor() {}
 
-    async render(...args: Token[]) {
-        await this.storage.save();
-
+    render(...args: Token[]) {
         if (args.length) {
             const [{ body }] = args;
 

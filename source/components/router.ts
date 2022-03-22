@@ -1,16 +1,11 @@
-import { basename, join } from "../imports/path.ts";
-import { Path, getPath } from "../utils/path.ts";
+import { NonExistFolder, NotAllowedPath, Path } from "../utils/path.ts";
+import { join, basename } from "../imports/path.ts";
 import { bold, red } from "../imports/colors.ts";
 import { formatRoute } from "../utils/fmt.ts";
 import { getRoute } from "../utils/route.ts";
-<<<<<<< HEAD
-import { exist } from "../utils/fs.ts";
-=======
-import { NonExistFolder, NotAllowedPath, Path } from "../utils/path.ts";
->>>>>>> 718dcae58fe40eb30b61e99253448a1bec91936b
 
 export class Router {
-    public static instance = new Router(getPath());
+    public static instance = new Router(Path.instance);
 
     constructor(private path: Path) {
         Router.instance = this;
@@ -63,7 +58,6 @@ export class Router {
         return this.path.root.join("\\");
     }
 
-<<<<<<< HEAD
     public backslash() {
         return {
             getPublicRoute: () => {
@@ -79,9 +73,6 @@ export class Router {
         return route.replaceAll("\\", "/");
     }
 
-    private NonExistFolder(folder: string) {
-        console.log(`${red("NonExist Folder")}: ${bold(folder)}`);
-=======
     private NonExistFolder(error: NotAllowedPath | NonExistFolder) {
         if (error instanceof NonExistFolder) {
             console.log(`${red("NonExist Folder")}: ${bold(error.dir)}`);
@@ -90,6 +81,5 @@ export class Router {
         if (error instanceof NotAllowedPath) {
             console.log(`${red("NotAllowedPath")}: ${bold(error.path)}`);
         }
->>>>>>> 718dcae58fe40eb30b61e99253448a1bec91936b
     }
 }

@@ -5,5 +5,5 @@ export function formatRoute(route: string) {
 export function Capitalize(text: string) {
     const [first, ...letters] = text.split("");
 
-    return [first.toUpperCase(), ...letters].join("");
+    return [first.toUpperCase(), ...letters.map((letter) => letter.toLocaleLowerCase())].join("");
 }

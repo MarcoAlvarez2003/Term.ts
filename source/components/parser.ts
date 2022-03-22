@@ -6,11 +6,11 @@ export interface Token {
 }
 
 export class Parser {
-    private letters: string[] = [];
-    private tokens: Token[] = [];
-    private index = 0;
+    protected letters: string[] = [];
+    protected tokens: Token[] = [];
+    protected index = 0;
 
-    constructor(private source: string) {
+    constructor(protected source: string) {
         for (; this.index < source.length; this.index++) {
             if (this.current === '"' || this.current === "'") {
                 this.createWord();

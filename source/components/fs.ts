@@ -3,18 +3,22 @@ import { exist } from "../utils/fs.ts";
 
 export interface Folder {
     folders: Folder[];
-    files: File[];
+    files: Stat[];
     name: string;
 }
 
-export interface File {
+export interface Stat {
     extension: string;
     name: string;
+    size: number;
+    path: string;
+}
+export interface File extends Stat {
     body: string;
 }
 
 export class FileSystem {
-    public static async getFolderContent(route: string) {
+    public static async getFolderContent(route: string): Promise<Folder | undefined> {
         if (await exist(route)) {
             const name = basename(route);
 
@@ -34,10 +38,10 @@ export class FileSystem {
                         folder.folders.push(_folder);
                     }
                 } else {
-                    const file = await FileSystem.getFile(path);
+                    const stat = await FileSystem.getStat(path);
 
-                    if (file) {
-                        folder.files.push(file);
+                    if (stat) {
+                        folder.files.push(stat);
                     }
                 }
             }
@@ -46,16 +50,30 @@ export class FileSystem {
         }
     }
 
-    public static async getFile(route: string) {
+    public static async getStat(route: string): Promise<Stat | undefined> {
         if (await exist(route)) {
-            const body = await Deno.readTextFile(route);
-            const name = basename(route);
+            const stat = await Deno.stat(route);
 
             return {
-                name,
-                body,
                 extension: extname(route),
+                name: basename(route),
+                size: stat.size,
+                path: route,
             };
+        }
+    }
+
+    public static async getFile(route: string): Promise<File | undefined> {
+        if (await exist(route)) {
+            const stat = await FileSystem.getStat(route);
+            const body = await Deno.readTextFile(route);
+
+            if (stat) {
+                return {
+                    body,
+                    ...stat,
+                };
+            }
         }
     }
 }

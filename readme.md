@@ -42,7 +42,7 @@ Term currently has 6 commands or more, depending on how much you update the read
 
 - **cd** `<Folder>`
 - **show** `<Info>`
-- **read** `<File>` if it has no arguments it will read the current directory
+- **read** `<File> <Each>` if it has no arguments it will read the current directory
 - **clear**
 - **exit**
 - **servis**

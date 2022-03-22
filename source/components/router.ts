@@ -1,12 +1,16 @@
 import { basename, join } from "../imports/path.ts";
+import { Path, getPath } from "../utils/path.ts";
 import { bold, red } from "../imports/colors.ts";
 import { formatRoute } from "../utils/fmt.ts";
 import { getRoute } from "../utils/route.ts";
-import { Path } from "../utils/path.ts";
 import { exist } from "../utils/fs.ts";
 
 export class Router {
-    constructor(private path: Path) {}
+    public static instance = new Router(getPath());
+
+    constructor(private path: Path) {
+        Router.instance = this;
+    }
 
     public async goto(route: string) {
         const _route = getRoute(formatRoute(route));
@@ -64,6 +68,21 @@ export class Router {
 
     public getPrivateRoute() {
         return this.path.private.join("\\");
+    }
+
+    public backslash() {
+        return {
+            getPublicRoute: () => {
+                return this.toBackSlashFormat(this.getPublicRoute());
+            },
+            getPrivateRoute: () => {
+                return this.toBackSlashFormat(this.getPrivateRoute());
+            },
+        };
+    }
+
+    public toBackSlashFormat(route: string) {
+        return route.replaceAll("\\", "/");
     }
 
     private NonExistFolder(folder: string) {

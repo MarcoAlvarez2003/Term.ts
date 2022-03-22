@@ -47,7 +47,7 @@ export class Input {
 
     private static printMessage(message: string) {
         console.clear();
-        console.log(message);
+        console.log(`${message} (move using w and s):`);
     }
 
     private static printChoice<Type>(index: number, choices: Type[]) {

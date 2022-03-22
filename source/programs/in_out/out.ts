@@ -1,10 +1,13 @@
 import { Command } from "../../components/commander.ts";
 import { Token } from "../../components/parser.ts";
+import { MemoryStorage } from "../../components/storage.ts";
 
 export class Log implements Command {
     public target = /log/;
 
     render(...args: Token[]): void {
+        console.log();
+
         console.log(
             ...args.map((arg) => {
                 return arg.body;
@@ -26,7 +29,11 @@ export class Clear implements Command {
 export class Exit implements Command {
     public target = /(exit)/;
 
-    render(...args: Token[]): void {
+    constructor(private storage: MemoryStorage) {}
+
+    async render(...args: Token[]) {
+        await this.storage.save();
+
         if (args.length) {
             const [{ body }] = args;
 

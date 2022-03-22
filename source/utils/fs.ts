@@ -1,4 +1,4 @@
-async function exist(path: string) {
+async function exist(path: string): Promise<boolean> {
     try {
         await Deno.stat(path);
 

@@ -1,6 +1,8 @@
 {
     "deno.unstable": true,
     "deno.enable": true,
-    "deno.lint": true,
-    "editor.formatOnSave": true
+    "deno.lint": false,
+    "editor.formatOnSave": true,
+    "tsimporter.removeFileExtensions": "",
+    "cSpell.words": ["Servis"]
 }
